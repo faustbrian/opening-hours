@@ -1,0 +1,817 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method Cline\\OpeningHours\\Helpers\\Arr\:\:createUniquePairs\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/Arr.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\Helpers\\Arr\:\:createUniquePairs\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/Arr.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\Helpers\\Arr\:\:filter\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/Arr.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\Helpers\\Arr\:\:filter\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/Arr.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\Helpers\\Arr\:\:flatMap\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/Arr.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\Helpers\\Arr\:\:flatMap\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/Arr.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\Helpers\\Arr\:\:map\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/Arr.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\Helpers\\Arr\:\:map\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/Arr.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\Helpers\\Arr\:\:pull\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Helpers/Arr.php
+
+		-
+			message: '#^Call to an undefined method DateTimeInterface\:\:modify\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Call to an undefined method DateTimeInterface\:\:setTime\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Cannot access offset ''friday''\|''monday''\|''saturday''\|''sunday''\|''thursday''\|''tuesday''\|''wednesday'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Cannot access offset 0 on list\<string\>\|false\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Cannot access offset 1 on list\<string\>\|false\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Cannot call method format\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Cannot call method modify\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Cannot call method setTime\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 6
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Cannot cast Cline\\OpeningHours\\OpeningHoursForDay\|non\-empty\-list\<\(int\|string\)\> to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Cannot cast mixed to float\.$#'
+			identifier: cast.double
+			count: 2
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:__construct\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:asStructuredData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:copyAndModify\(\) should return DateTimeInterface but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 8
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:createAndMergeOverlappingRanges\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 8
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:createFromStructuredData\(\) has parameter \$structuredData with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:exceptionalClosingDates\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:exceptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:filter\(\) should return array\<Cline\\OpeningHours\\OpeningHoursForDay\> but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:filterExceptions\(\) should return array\<Cline\\OpeningHours\\OpeningHoursForDay\> but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:filterHours\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:filterHours\(\) has parameter \$excludedKeys with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:flatMap\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:flatMapExceptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:forDateTime\(\) should return array\<Cline\\OpeningHours\\TimeRange\> but returns array\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:forWeek\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:forWeekCombined\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:forWeekConsecutiveDays\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:getFilters\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:getOpeningHoursFromStrings\(\) has parameter \$openingHours with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:isValid\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:map\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:mapExceptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:mergeOverlappingRanges\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:mergeOverlappingRanges\(\) has parameter \$excludedKeys with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:mergeOverlappingRanges\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:parseDaysOfWeeks\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:parseDaysOfWeeks\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:parseExceptions\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:parseExceptions\(\) has parameter \$filters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:parseExceptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:parseOpeningHoursAndExceptions\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:parseOpeningHoursAndExceptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:readDatesRange\(\) return type has no value type specified in iterable type iterable\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:regularClosingDays\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:regularClosingDaysISO\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHours\:\:setExceptionsFromStrings\(\) has parameter \$exceptions with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 2
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(string\)\: int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$data of method Cline\\OpeningHours\\OpeningHours\:\:parseExceptions\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$data of static method Cline\\OpeningHours\\OpeningHours\:\:create\(\) expects array\{monday\?\: array\<array\|string\>, tuesday\?\: array\<array\|string\>, wednesday\?\: array\<array\|string\>, thursday\?\: array\<array\|string\>, friday\?\: array\<array\|string\>, saturday\?\: array\<array\|string\>, sunday\?\: array\<array\|string\>, exceptions\?\: array\<array\<array\|string\>\>, \.\.\.\}, array given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$date of method Cline\\OpeningHours\\OpeningHours\:\:applyTimezone\(\) expects DateTimeInterface, object given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$date of method Cline\\OpeningHours\\OpeningHours\:\:copyAndModify\(\) expects DateTimeInterface, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$date of method Cline\\OpeningHours\\OpeningHours\:\:forDate\(\) expects DateTimeInterface, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$date of method Cline\\OpeningHours\\OpeningHours\:\:getDateWithTimezone\(\) expects DateTimeInterface, mixed given\.$#'
+			identifier: argument.type
+			count: 10
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$dateTime of method Cline\\OpeningHours\\OpeningHours\:\:isClosedAt\(\) expects DateTimeInterface, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$dateTime of method Cline\\OpeningHours\\OpeningHours\:\:isClosedAt\(\) expects DateTimeInterface, object given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$dateTime of method Cline\\OpeningHours\\OpeningHours\:\:isOpenAt\(\) expects DateTimeInterface, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$dateTime of method Cline\\OpeningHours\\OpeningHours\:\:isOpenAt\(\) expects DateTimeInterface, object given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$dateTime of method Cline\\OpeningHours\\OpeningHours\:\:nextOpen\(\) expects DateTimeInterface\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$dateTime of static method Cline\\OpeningHours\\PreciseTime\:\:fromDateTime\(\) expects DateTimeInterface, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$day of method Cline\\OpeningHours\\OpeningHours\:\:normalizeDayName\(\) expects Cline\\OpeningHours\\Day\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$exceptions of method Cline\\OpeningHours\\OpeningHours\:\:setExceptionsFromStrings\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$object_or_class of function is_a expects object\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$openingHours of method Cline\\OpeningHours\\OpeningHours\:\:getOpeningHoursFromStrings\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$string of static method Cline\\OpeningHours\\Exceptions\\InvalidDateTimeClass\:\:forString\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, list\<string\>\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#2 \$date of static method Cline\\OpeningHours\\Exceptions\\InvalidDateRange\:\:invalidDateRange\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#2 \$datetime of static method DateTime\:\:createFromFormat\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Parameter \#2 \$filters of method Cline\\OpeningHours\\OpeningHours\:\:parseExceptions\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Possibly invalid array key type int\|string\|null\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 3
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Property Cline\\OpeningHours\\OpeningHours\:\:\$dateTimeClass \(string\) does not accept class\-string\<DateTimeInterface\>\|DateTimeInterface\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Property Cline\\OpeningHours\\OpeningHours\:\:\$exceptions \(array\<Cline\\OpeningHours\\OpeningHoursForDay\>\) does not accept array\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Property Cline\\OpeningHours\\OpeningHours\:\:\$filters \(array\<callable\(\)\: mixed\>\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Property Cline\\OpeningHours\\OpeningHours\:\:\$overflow \(bool\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/OpeningHours.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Class Cline\\OpeningHours\\OpeningHoursForDay implements generic interface ArrayAccess but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Class Cline\\OpeningHours\\OpeningHoursForDay implements generic interface IteratorAggregate but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:fromStrings\(\) has parameter \$strings with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:getHoursFromRange\(\) has parameter \$range with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:getIterator\(\) return type with generic class ArrayIterator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:guardAgainstTimeRangeOverlaps\(\) has parameter \$openingHours with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:map\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:nextClose\(\) should return Cline\\OpeningHours\\Time\|null but returns Cline\\OpeningHours\\Time\|Cline\\OpeningHours\\TimeRange\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:nextCloseRange\(\) should return Cline\\OpeningHours\\TimeRange\|null but returns Cline\\OpeningHours\\Time\|Cline\\OpeningHours\\TimeRange\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:nextOpen\(\) should return Cline\\OpeningHours\\Time\|null but returns Cline\\OpeningHours\\Time\|Cline\\OpeningHours\\TimeRange\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:nextOpenRange\(\) should return Cline\\OpeningHours\\TimeRange\|null but returns Cline\\OpeningHours\\Time\|Cline\\OpeningHours\\TimeRange\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:openingHoursFilter\(\) should return Cline\\OpeningHours\\Time\|Cline\\OpeningHours\\TimeRange\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:previousClose\(\) should return Cline\\OpeningHours\\Time\|null but returns Cline\\OpeningHours\\Time\|Cline\\OpeningHours\\TimeRange\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:previousCloseRange\(\) should return Cline\\OpeningHours\\TimeRange\|null but returns Cline\\OpeningHours\\Time\|Cline\\OpeningHours\\TimeRange\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:previousOpen\(\) should return Cline\\OpeningHours\\Time\|null but returns Cline\\OpeningHours\\Time\|Cline\\OpeningHours\\TimeRange\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursForDay\:\:previousOpenRange\(\) should return Cline\\OpeningHours\\TimeRange\|null but returns Cline\\OpeningHours\\Time\|Cline\\OpeningHours\\TimeRange\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^PHPDoc tag @return with type array\<Cline\\OpeningHours\\TimeRange\> is incompatible with native type Generator\.$#'
+			identifier: return.phpDocType
+			count: 2
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Parameter \#1 \$openingHours of class Cline\\OpeningHours\\OpeningHoursForDay constructor expects array\<Cline\\OpeningHours\\TimeRange\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Parameter \#1 \$strings of static method Cline\\OpeningHours\\OpeningHoursForDay\:\:fromStrings\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
+			path: src/OpeningHoursForDay.php
+
+		-
+			message: '#^Cannot access an offset on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/OpeningHoursSpecificationParser.php
+
+		-
+			message: '#^Cannot access offset string on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/OpeningHoursSpecificationParser.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursSpecificationParser\:\:__construct\(\) has parameter \$openingHoursSpecification with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHoursSpecificationParser.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursSpecificationParser\:\:addDaysOfWeek\(\) has parameter \$dayOfWeek with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHoursSpecificationParser.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursSpecificationParser\:\:create\(\) has parameter \$openingHoursSpecification with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHoursSpecificationParser.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursSpecificationParser\:\:createFromArray\(\) has parameter \$openingHoursSpecification with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHoursSpecificationParser.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\OpeningHoursSpecificationParser\:\:getOpeningHours\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHoursSpecificationParser.php
+
+		-
+			message: '#^Parameter \#1 \$openingHoursSpecification of static method Cline\\OpeningHours\\OpeningHoursSpecificationParser\:\:createFromArray\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHoursSpecificationParser.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/OpeningHoursSpecificationParser.php
+
+		-
+			message: '#^Property Cline\\OpeningHours\\OpeningHoursSpecificationParser\:\:\$openingHours type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/OpeningHoursSpecificationParser.php
+
+		-
+			message: '#^Call to an undefined method DateTimeInterface\:\:modify\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Time.php
+
+		-
+			message: '#^Call to an undefined method DateTimeInterface\:\:setTime\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Time.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\Time\:\:copyAndModify\(\) should return DateTimeInterface but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Time.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\Time\:\:toDateTime\(\) should return DateTimeInterface but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Time.php
+
+		-
+			message: '#^Parameter \#2 \$date of method Cline\\OpeningHours\\Time\:\:formatSecond\(\) expects DateTimeImmutable\|null, DateTimeInterface\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Time.php
+
+		-
+			message: '#^Call to an undefined method DateTimeInterface\:\:modify\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/TimeRange.php
+
+		-
+			message: '#^Cannot access property \$end on mixed\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: src/TimeRange.php
+
+		-
+			message: '#^Cannot access property \$start on mixed\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: src/TimeRange.php
+
+		-
+			message: '#^Cannot call method isAfter\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/TimeRange.php
+
+		-
+			message: '#^Cannot call method isBefore\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/TimeRange.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\TimeRange\:\:copyAndModify\(\) should return DateTimeInterface but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/TimeRange.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\TimeRange\:\:fromArray\(\) has parameter \$array with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/TimeRange.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\TimeRange\:\:fromDefinition\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/TimeRange.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\TimeRange\:\:fromList\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/TimeRange.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\TimeRange\:\:fromList\(\) has parameter \$ranges with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/TimeRange.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\TimeRange\:\:fromMidnight\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/TimeRange.php
+
+		-
+			message: '#^Method Cline\\OpeningHours\\TimeRange\:\:fromString\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/TimeRange.php
+
+		-
+			message: '#^Parameter \#1 \$start of class Cline\\OpeningHours\\TimeRange constructor expects Cline\\OpeningHours\\Time, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/TimeRange.php
+
+		-
+			message: '#^Parameter \#1 \$string of static method Cline\\OpeningHours\\TimeRange\:\:fromString\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/TimeRange.php
+
+		-
+			message: '#^Parameter \#2 \$end of class Cline\\OpeningHours\\TimeRange constructor expects Cline\\OpeningHours\\Time, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/TimeRange.php

@@ -1,0 +1,99 @@
+<?php declare(strict_types=1);
+
+/**
+ * Copyright (C) Brian Faust
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Tests;
+
+use Cline\OpeningHours\PreciseTime;
+use DateTimeImmutable;
+use DateTimeZone;
+use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+
+use const PHP_VERSION;
+
+/**
+ * @author Brian Faust <brian@cline.sh>
+ * @internal
+ */
+final class PreciseTimeTest extends TestCase
+{
+    #[Test()]
+    public function it_can_be_formatted(): void
+    {
+        $date = new DateTimeImmutable('2022-08-07 23:32:58.123456 America/Toronto');
+        $this->assertSame(
+            '2022-08-08 05:32:58.123456 Europe/Berlin',
+            PreciseTime::fromDateTime($date)->format('Y-m-d H:i:s.u e', 'Europe/Berlin'),
+        );
+        $this->assertSame(
+            '2022-08-08 12:32:58.123456 Asia/Tokyo',
+            PreciseTime::fromDateTime($date)->format('Y-m-d H:i:s.u e', new DateTimeZone('Asia/Tokyo')),
+        );
+    }
+
+    #[Test()]
+    public function it_can_return_original_datetime(): void
+    {
+        $date = new DateTimeImmutable('2022-08-07 23:32:58.123456 America/Toronto');
+        $this->assertSame($date, PreciseTime::fromDateTime($date)->toDateTime());
+        $this->assertSame('2021-11-25 23:32:58'.(PHP_VERSION < 7.1 ? '' : '.123456').' Asia/Tokyo', PreciseTime::fromDateTime($date)->toDateTime(
+            new DateTimeImmutable('2021-11-25 15:02:03.987654 Asia/Tokyo'),
+        )->format('Y-m-d H:i:s'.(PHP_VERSION < 7.1 ? '' : '.u').' e'));
+    }
+
+    #[Test()]
+    public function it_can_return_diff(): void
+    {
+        $date = new DateTimeImmutable('2021-08-07 23:32:58.123456 America/Toronto');
+        $this->assertSame(
+            '02 29 05 '.(PHP_VERSION < 7.1 ? '%F' : '864198'),
+            PreciseTime::fromDateTime($date)->diff(PreciseTime::fromDateTime(
+                new DateTimeImmutable('2022-11-25 15:02:03.987654 Asia/Tokyo'),
+            ))->format('%H %I %S %F'),
+        );
+    }
+
+    #[Test()]
+    public function it_can_be_compared(): void
+    {
+        $date = new DateTimeImmutable('2022-08-07 23:32:58.123456 America/Toronto');
+        $this->assertSame($date, PreciseTime::fromDateTime($date)->toDateTime());
+        $this->assertTrue(PreciseTime::fromDateTime(
+            new DateTimeImmutable('2022-08-07 23:32:58.123456 America/Toronto'),
+        )->isSame(PreciseTime::fromDateTime(
+            new DateTimeImmutable('2021-11-25 23:32:58.123456 Asia/Tokyo'),
+        )));
+        $this->assertFalse(PreciseTime::fromDateTime(
+            new DateTimeImmutable('2022-08-07 23:32:58.123456 America/Toronto'),
+        )->isSame(PreciseTime::fromDateTime(
+            new DateTimeImmutable('2022-08-07 23:32:58.123457 America/Toronto'),
+        )));
+    }
+
+    #[Test()]
+    public function it_can_output_hours_and_minutes(): void
+    {
+        $date = PreciseTime::fromString('2022-08-07 23:32:58.123456 America/Toronto');
+        $this->assertSame(23, $date->hours());
+        $this->assertSame(32, $date->minutes());
+    }
+
+    #[Test()]
+    public function it_cannot_have_date_reference_point(): void
+    {
+        $this->expectExceptionObject(
+            new InvalidArgumentException(
+                PreciseTime::class.' does not support date reference point',
+            ),
+        );
+
+        PreciseTime::fromString('2022-08-07 23:32:58.123456 America/Toronto', date: new DateTimeImmutable());
+    }
+}
