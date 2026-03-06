@@ -174,3 +174,115 @@ test('it ignores previous day overflow ranges that end at midnight', function ()
         CarbonImmutable::parse('2026-03-09 00:00:00'),
     )?->format('Y-m-d H:i'))->toBe('2026-03-09 09:00');
 });
+
+test('it can merge overlapping ranges in a legacy definition', function (): void {
+    expect(OpeningHours::mergeOverlappingRanges([
+        'monday' => ['09:00-12:00', '11:00-13:00', '15:00-17:00'],
+        'exceptions' => [
+            '2026-12-24' => ['08:00-10:00', '09:30-11:00'],
+        ],
+    ]))->toBe([
+        'monday' => ['09:00-13:00', '15:00-17:00'],
+        'tuesday' => [],
+        'wednesday' => [],
+        'thursday' => [],
+        'friday' => [],
+        'saturday' => [],
+        'sunday' => [],
+        'exceptions' => [
+            '2026-12-24' => ['08:00-11:00'],
+        ],
+    ]);
+});
+
+test('it can normalize nested legacy day ranges before building details', function (): void {
+    expect(OpeningHours::mergeOverlappingRanges([
+        'monday' => [['08:00-20:00']],
+    ]))->toBe([
+        'monday' => ['08:00-20:00'],
+        'tuesday' => [],
+        'wednesday' => [],
+        'thursday' => [],
+        'friday' => [],
+        'saturday' => [],
+        'sunday' => [],
+        'exceptions' => [],
+    ]);
+});
+
+test('it can build from merged overlapping legacy ranges', function (): void {
+    expect(OpeningHours::mergeOverlappingRanges([
+        'saturday' => ['09:00-20:00', '10:00-23:59'],
+    ]))->toBe([
+        'monday' => [],
+        'tuesday' => [],
+        'wednesday' => [],
+        'thursday' => [],
+        'friday' => [],
+        'saturday' => ['09:00-23:59'],
+        'sunday' => [],
+        'exceptions' => [],
+    ]);
+
+    $openingHours = OpeningHours::fromArrayAndMergeOverlappingRanges([
+        'saturday' => ['09:00-20:00', '10:00-23:59'],
+    ]);
+
+    expect($openingHours->isOpenAt(
+        CarbonImmutable::parse('2026-03-07 22:00:00'),
+    ))->toBeTrue();
+});
+
+test('it preserves invalid exception payloads for strict validation later', function (): void {
+    expect(OpeningHours::mergeOverlappingRanges([
+        'exceptions' => '2026-12-24',
+    ]))->toBe([
+        'monday' => [],
+        'tuesday' => [],
+        'wednesday' => [],
+        'thursday' => [],
+        'friday' => [],
+        'saturday' => [],
+        'sunday' => [],
+        'exceptions' => '2026-12-24',
+    ]);
+});
+
+test('it rejects invalid nested merged day definitions', function (): void {
+    $this->expectException(DaySchedulesMustBeDefinedAsArrays::class);
+    $this->expectExceptionMessage('Day schedules must be defined as arrays');
+
+    OpeningHours::mergeOverlappingRanges([
+        'monday' => [false],
+    ]);
+});
+
+test('it merges overlapping ranges when the wider range appears later', function (): void {
+    expect(OpeningHours::mergeOverlappingRanges([
+        'monday' => [['hours' => ['11:00-13:00', '09:00-12:00']]],
+    ]))->toBe([
+        'monday' => ['09:00-13:00'],
+        'tuesday' => [],
+        'wednesday' => [],
+        'thursday' => [],
+        'friday' => [],
+        'saturday' => [],
+        'sunday' => [],
+        'exceptions' => [],
+    ]);
+});
+
+test('it keeps the earlier closing time source when it already covers the overlap', function (): void {
+    expect(OpeningHours::mergeOverlappingRanges([
+        'monday' => ['09:00-13:00', '11:00-12:00'],
+    ]))->toBe([
+        'monday' => ['09:00-13:00'],
+        'tuesday' => [],
+        'wednesday' => [],
+        'thursday' => [],
+        'friday' => [],
+        'saturday' => [],
+        'sunday' => [],
+        'exceptions' => [],
+    ]);
+});

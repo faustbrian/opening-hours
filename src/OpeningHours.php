@@ -36,8 +36,11 @@ use DateTimeZone;
 
 use function array_all;
 use function array_key_exists;
+use function array_key_last;
 use function array_keys;
 use function array_map;
+use function array_merge;
+use function array_values;
 use function in_array;
 use function is_array;
 use function is_string;
@@ -133,6 +136,60 @@ final readonly class OpeningHours
             $rules,
             $options,
         );
+    }
+
+    /**
+     * Creates opening hours from a legacy array definition and merges any
+     * overlapping local ranges before validation.
+     *
+     * @param array<array-key, mixed> $definition
+     *
+     * @throws InvalidOpeningHoursDefinition
+     */
+    public static function fromArrayAndMergeOverlappingRanges(
+        array $definition,
+        ?QueryOptions $options = null,
+    ): self {
+        return self::fromArray(
+            self::mergeOverlappingRanges($definition),
+            $options,
+        );
+    }
+
+    /**
+     * Normalize a legacy array definition into a strict package-compatible
+     * structure and merge overlapping local ranges within each day.
+     *
+     * @param  array<array-key, mixed> $definition
+     * @return array<string, mixed>
+     */
+    public static function mergeOverlappingRanges(array $definition): array
+    {
+        self::guardAgainstUnsupportedDefinitionKeys($definition);
+
+        $normalized = [];
+
+        foreach (Day::cases() as $day) {
+            $normalized[$day->value] = self::normalizeMergedDayDefinition(
+                $definition[$day->value] ?? [],
+            );
+        }
+
+        $exceptions = $definition['exceptions'] ?? [];
+
+        if (!is_array($exceptions)) {
+            $normalized['exceptions'] = $exceptions;
+
+            return $normalized;
+        }
+
+        $normalized['exceptions'] = [];
+
+        foreach ($exceptions as $key => $value) {
+            $normalized['exceptions'][$key] = self::normalizeMergedDayDefinition($value);
+        }
+
+        return $normalized;
     }
 
     /**
@@ -362,6 +419,92 @@ final readonly class OpeningHours
         }
 
         throw TimeRangesMustBeStringsOrContainHoursKey::timeRangesMustBeStringsOrContainHoursKey();
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function normalizeMergedDayDefinition(mixed $definition): array
+    {
+        $ranges = self::flattenRangeDefinitions($definition);
+
+        if ($ranges === []) {
+            return [];
+        }
+
+        usort(
+            $ranges,
+            static fn (LocalTimeRange $left, LocalTimeRange $right): int => $left->start()->minutesSinceMidnight() <=> $right->start()->minutesSinceMidnight(),
+        );
+
+        $merged = [];
+
+        foreach ($ranges as $range) {
+            $lastIndex = array_key_last($merged);
+
+            if ($lastIndex === null) {
+                $merged[] = $range;
+
+                continue;
+            }
+
+            $lastRange = $merged[$lastIndex];
+
+            if (!$lastRange->overlaps($range)) {
+                $merged[] = $range;
+
+                continue;
+            }
+
+            $merged[$lastIndex] = self::mergeLocalTimeRanges($lastRange, $range);
+        }
+
+        return array_values(array_map(
+            static fn (LocalTimeRange $range): string => $range->format(),
+            $merged,
+        ));
+    }
+
+    /**
+     * @return list<LocalTimeRange>
+     */
+    private static function flattenRangeDefinitions(mixed $definition): array
+    {
+        if ($definition === null || $definition === []) {
+            return [];
+        }
+
+        if (is_string($definition)) {
+            return [LocalTimeRange::fromString($definition)];
+        }
+
+        if (!is_array($definition)) {
+            throw DaySchedulesMustBeDefinedAsArrays::daySchedulesMustBeDefinedAsArrays();
+        }
+
+        if (array_key_exists('hours', $definition)) {
+            return self::flattenRangeDefinitions($definition['hours']);
+        }
+
+        return array_merge(
+            ...array_map(
+                self::flattenRangeDefinitions(...),
+                $definition,
+            ),
+        );
+    }
+
+    private static function mergeLocalTimeRanges(
+        LocalTimeRange $left,
+        LocalTimeRange $right,
+    ): LocalTimeRange {
+        $start = $left->start()->format();
+
+        $end = $left->end()->minutesSinceMidnight() >= $right->end()->minutesSinceMidnight()
+            ? $left->end()->format()
+            : $right->end()->format();
+
+        return LocalTimeRange::fromString($start.'-'.$end);
     }
 
     /**
