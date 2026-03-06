@@ -1,0 +1,57 @@
+{
+    "name": "cline/opening-hours",
+    "description": "A helper to query and format a set of opening hours",
+    "license": "MIT",
+    "keywords": [
+        "php"
+    ],
+    "authors": [
+        {
+            "name": "Brian Faust",
+            "email": "brian@cline.sh"
+        }
+    ],
+    "require": {
+        "php": "^8.5.0"
+    },
+    "require-dev": {
+        "cline/coding-standard": "^1.5.6",
+        "orchestra/testbench": "^10.8",
+        "symfony/var-dumper": "^7.4.0"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Cline\\OpeningHours\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "ergebnis/composer-normalize": true,
+            "pestphp/pest-plugin": true
+        }
+    },
+    "scripts": {
+        "lint": "vendor/bin/ecs check --fix",
+        "refactor": "rector",
+        "test": [
+            "@test:lint",
+            "@test:type-coverage",
+            "@test:unit",
+            "@test:types",
+            "@test:refactor"
+        ],
+        "test:lint": "vendor/bin/ecs check",
+        "test:refactor": "rector --dry-run",
+        "test:type-coverage": "pest --parallel --min=80 --type-coverage",
+        "test:types": "phpstan",
+        "test:unit": "pest --min=80 --coverage"
+    }
+}

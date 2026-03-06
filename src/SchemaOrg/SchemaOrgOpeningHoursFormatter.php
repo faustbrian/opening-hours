@@ -1,0 +1,139 @@
+<?php declare(strict_types=1);
+
+/**
+ * Copyright (C) Brian Faust
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Cline\OpeningHours\SchemaOrg;
+
+use Cline\OpeningHours\Rule\DateOverrideRule;
+use Cline\OpeningHours\Rule\DateRangeOverrideRule;
+use Cline\OpeningHours\Rule\MonthDayOverrideRule;
+use Cline\OpeningHours\Schedule\DaySchedule;
+use Cline\OpeningHours\Schedule\Schedule;
+use Cline\OpeningHours\Value\Day;
+
+use function ucfirst;
+
+/**
+ * Formats schedules as Schema.org `OpeningHoursSpecification` items.
+ *
+ * @author Brian Faust <brian@cline.sh>
+ */
+final class SchemaOrgOpeningHoursFormatter
+{
+    /**
+     * Format weekly schedules and overrides as Schema.org items.
+     *
+     * @return list<array<string, string>>
+     */
+    public static function format(Schedule $schedule): array
+    {
+        $items = [];
+
+        foreach (Day::cases() as $day) {
+            foreach ($schedule->weeklySchedule()->forDay($day)->ranges() as $range) {
+                $items[] = [
+                    '@type' => 'OpeningHoursSpecification',
+                    'dayOfWeek' => ucfirst($day->value),
+                    'opens' => $range->start()->format(),
+                    'closes' => $range->end()->format(),
+                ];
+            }
+        }
+
+        foreach ($schedule->rules() as $rule) {
+            if ($rule instanceof DateOverrideRule) {
+                $items = [...$items, ...self::formatDateRule($rule)];
+
+                continue;
+            }
+
+            if ($rule instanceof DateRangeOverrideRule) {
+                $items = [...$items, ...self::formatDateRangeRule($rule)];
+
+                continue;
+            }
+
+            if (!$rule instanceof MonthDayOverrideRule) {
+                continue;
+            }
+
+            $items = [...$items, ...self::formatMonthDayRule($rule)];
+        }
+
+        return $items;
+    }
+
+    /**
+     * @return list<array<string, string>>
+     */
+    private static function formatDateRule(DateOverrideRule $rule): array
+    {
+        return self::formatScheduleWithValidity(
+            $rule->schedule(),
+            $rule->date(),
+            $rule->date(),
+        );
+    }
+
+    /**
+     * @return list<array<string, string>>
+     */
+    private static function formatDateRangeRule(DateRangeOverrideRule $rule): array
+    {
+        return self::formatScheduleWithValidity(
+            $rule->schedule(),
+            $rule->from(),
+            $rule->through(),
+        );
+    }
+
+    /**
+     * @return list<array<string, string>>
+     */
+    private static function formatMonthDayRule(MonthDayOverrideRule $rule): array
+    {
+        return self::formatScheduleWithValidity(
+            $rule->schedule(),
+            $rule->monthDay(),
+            $rule->monthDay(),
+        );
+    }
+
+    /**
+     * @return list<array<string, string>>
+     */
+    private static function formatScheduleWithValidity(
+        DaySchedule $schedule,
+        string $from,
+        string $through,
+    ): array {
+        if ($schedule->isClosed()) {
+            return [[
+                '@type' => 'OpeningHoursSpecification',
+                'opens' => '00:00',
+                'closes' => '00:00',
+                'validFrom' => $from,
+                'validThrough' => $through,
+            ]];
+        }
+
+        $items = [];
+
+        foreach ($schedule->ranges() as $range) {
+            $items[] = [
+                '@type' => 'OpeningHoursSpecification',
+                'opens' => $range->start()->format(),
+                'closes' => $range->end()->format(),
+                'validFrom' => $from,
+                'validThrough' => $through,
+            ];
+        }
+
+        return $items;
+    }
+}
