@@ -12,6 +12,10 @@ namespace Cline\OpeningHours\Exceptions;
 /**
  * Thrown when a Schema.org `validThrough` date is malformed.
  *
+ * The parser accepts full `Y-m-d` dates and recurring `m-d` values because
+ * those map directly to the package's override abstractions. Other formats are
+ * rejected before rule construction.
+ *
  * @author Brian Faust <brian@cline.sh>
  */
 final class InvalidStructuredDataValidThroughDate extends InvalidOpeningHoursSpecification

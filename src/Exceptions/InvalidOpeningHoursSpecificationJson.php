@@ -12,7 +12,11 @@ namespace Cline\OpeningHours\Exceptions;
 use JsonException;
 
 /**
- * Thrown when Schema.org opening-hours JSON cannot be decoded.
+ * Thrown when raw Schema.org JSON cannot be decoded into an array payload.
+ *
+ * The original {@see JsonException} is preserved as the previous exception so
+ * callers can inspect the lower-level parse failure when they need exact JSON
+ * diagnostics.
  *
  * @author Brian Faust <brian@cline.sh>
  */

@@ -15,14 +15,20 @@ use DateTimeInterface;
 /**
  * Applies a replacement day schedule to every date in an inclusive calendar range.
  *
+ * This rule models temporary seasons or multi-day closure windows where the same daily
+ * schedule should be used for each date in the range. The comparison is inclusive on
+ * both ends and relies on canonical `Y-m-d` strings so lexical ordering matches
+ * chronological ordering.
+ *
  * @author Brian Faust <brian@cline.sh>
  * @psalm-immutable
  */
 final readonly class DateRangeOverrideRule implements ScheduleRule
 {
     /**
-     * @param string $from    Inclusive range start in `Y-m-d` format.
-     * @param string $through Inclusive range end in `Y-m-d` format.
+     * @param string      $from     Inclusive range start in `Y-m-d` format.
+     * @param string      $through  Inclusive range end in `Y-m-d` format.
+     * @param DaySchedule $schedule Replacement schedule used for every matching date.
      */
     public function __construct(
         private string $from,
@@ -32,6 +38,9 @@ final readonly class DateRangeOverrideRule implements ScheduleRule
 
     /**
      * Determine whether this override applies to the given date.
+     *
+     * The comparison uses normalized `Y-m-d` strings so the rule remains simple and does
+     * not depend on mutable date arithmetic during lookup.
      */
     public function appliesTo(DateTimeInterface $date): bool
     {
@@ -41,7 +50,7 @@ final readonly class DateRangeOverrideRule implements ScheduleRule
     }
 
     /**
-     * Get the schedule that replaces the normal one for matching dates.
+     * Return the schedule that replaces the baseline schedule for matching dates.
      */
     public function schedule(): DaySchedule
     {
@@ -49,7 +58,7 @@ final readonly class DateRangeOverrideRule implements ScheduleRule
     }
 
     /**
-     * Get the inclusive range start in `Y-m-d` format.
+     * Return the inclusive range start in `Y-m-d` format.
      */
     public function from(): string
     {
@@ -57,7 +66,7 @@ final readonly class DateRangeOverrideRule implements ScheduleRule
     }
 
     /**
-     * Get the inclusive range end in `Y-m-d` format.
+     * Return the inclusive range end in `Y-m-d` format.
      */
     public function through(): string
     {

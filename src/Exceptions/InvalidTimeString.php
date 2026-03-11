@@ -14,7 +14,11 @@ use Exception;
 use function sprintf;
 
 /**
- * Thrown when a local time string does not match the expected `H:i` format.
+ * Thrown when a local clock time does not match the package's accepted format.
+ *
+ * `LocalTime` accepts 24-hour values plus the special sentinel `24:00`, so
+ * this exception identifies strings that cannot participate in schedule math
+ * or be used as range boundaries.
  *
  * @author Brian Faust <brian@cline.sh>
  */

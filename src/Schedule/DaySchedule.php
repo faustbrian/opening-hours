@@ -21,7 +21,12 @@ use function implode;
 use function usort;
 
 /**
- * Immutable opening-hours schedule for a single day.
+ * Immutable opening-hours schedule for one resolved calendar day.
+ *
+ * Stores a day's local opening ranges in start-time order and enforces the invariant
+ * that those ranges never overlap. That gives higher-level resolvers a compact,
+ * trustworthy representation they can query for containment, carry-over behavior, and
+ * always-open shortcuts without revalidating every range.
  *
  * @author Brian Faust <brian@cline.sh>
  * @psalm-immutable
@@ -29,7 +34,7 @@ use function usort;
 final readonly class DaySchedule implements Stringable
 {
     /**
-     * @param list<LocalTimeRange> $ranges
+     * @param list<LocalTimeRange> $ranges Non-overlapping local ranges sorted by start time.
      */
     private function __construct(
         private array $ranges,
@@ -37,6 +42,9 @@ final readonly class DaySchedule implements Stringable
 
     /**
      * Format the schedule as a comma-separated list of local time ranges.
+     *
+     * This mirrors the package's compact human-readable representation and is useful for
+     * diagnostics, debugging, and snapshot-style assertions.
      */
     public function __toString(): string
     {
@@ -44,7 +52,7 @@ final readonly class DaySchedule implements Stringable
     }
 
     /**
-     * Create a schedule with no opening ranges.
+     * Create a schedule that remains closed for the entire day.
      */
     public static function closed(): self
     {
@@ -54,7 +62,9 @@ final readonly class DaySchedule implements Stringable
     /**
      * Create a day schedule from one or more non-overlapping ranges.
      *
-     * Ranges are normalized into start-time order before storage.
+     * Ranges are normalized into start-time order before storage so all downstream
+     * operations can assume a predictable representation. Any overlap is rejected because
+     * overlapping ranges would make containment and boundary calculations ambiguous.
      *
      * @throws DaySchedulesCannotContainOverlappingRanges When any ranges overlap.
      */
@@ -74,6 +84,8 @@ final readonly class DaySchedule implements Stringable
     }
 
     /**
+     * Return the day's opening ranges in normalized storage order.
+     *
      * @return list<LocalTimeRange>
      */
     public function ranges(): array
@@ -82,7 +94,7 @@ final readonly class DaySchedule implements Stringable
     }
 
     /**
-     * Determine whether the schedule has no opening ranges.
+     * Determine whether the schedule has no opening ranges at all.
      */
     public function isClosed(): bool
     {
@@ -91,6 +103,9 @@ final readonly class DaySchedule implements Stringable
 
     /**
      * Determine whether the given local time falls inside any opening range.
+     *
+     * Range containment semantics come from {@see LocalTimeRange}, including support for
+     * ranges that wrap past midnight.
      */
     public function contains(LocalTime $time): bool
     {
@@ -99,6 +114,9 @@ final readonly class DaySchedule implements Stringable
 
     /**
      * Determine whether any opening range continues past midnight.
+     *
+     * Higher-level schedule queries use this to decide whether a previous day's schedule
+     * can affect the next calendar date.
      */
     public function carriesIntoNextDay(): bool
     {
@@ -107,6 +125,9 @@ final readonly class DaySchedule implements Stringable
 
     /**
      * Determine whether the schedule represents continuous opening from 00:00 to 24:00.
+     *
+     * This intentionally recognizes only the package's canonical all-day representation,
+     * which is a single range spanning the full local day.
      */
     public function isAlwaysOpen(): bool
     {

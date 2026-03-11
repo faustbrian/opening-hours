@@ -12,7 +12,11 @@ namespace Cline\OpeningHours\Exceptions;
 use InvalidArgumentException;
 
 /**
- * Base exception for invalid package-native opening-hours definitions.
+ * Base exception for malformed package-native opening-hours definitions.
+ *
+ * Exceptions extending this type indicate that the caller supplied an invalid
+ * array definition while using the package's own weekday-and-exceptions input
+ * format, rather than the Schema.org import format.
  *
  * @author Brian Faust <brian@cline.sh>
  */

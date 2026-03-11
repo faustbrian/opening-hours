@@ -12,7 +12,12 @@ namespace Cline\OpeningHours\Exceptions;
 use Throwable;
 
 /**
+ * Marker interface for all package-specific failures.
+ *
+ * Consumers can catch this interface to handle validation, parsing, and query
+ * errors raised by the opening-hours package without also swallowing unrelated
+ * framework or PHP exceptions.
+ *
  * @author Brian Faust <brian@cline.sh>
- * Marker interface for exceptions raised by this package.
  */
 interface OpeningHoursException extends Throwable {}

@@ -12,6 +12,9 @@ namespace Cline\OpeningHours\Exceptions;
 /**
  * Thrown when Schema.org `PublicHolidays` is provided.
  *
+ * The package models explicit weekdays and explicit date-based exceptions only.
+ * Public-holiday calendars depend on locale and are therefore not inferred.
+ *
  * @author Brian Faust <brian@cline.sh>
  */
 final class PublicHolidaysNotSupported extends InvalidOpeningHoursSpecification

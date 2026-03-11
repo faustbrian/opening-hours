@@ -12,14 +12,18 @@ namespace Cline\OpeningHours\Exceptions;
 use function sprintf;
 
 /**
- * Thrown when the top-level schedule definition contains an unknown key.
+ * Thrown when a top-level array definition contains an unsupported schedule key.
+ *
+ * Native schedule definitions only accept weekday names plus the reserved
+ * `exceptions` key. Rejecting unknown keys early helps surface typos and avoids
+ * silently ignoring configuration that the resolver would never consult.
  *
  * @author Brian Faust <brian@cline.sh>
  */
 final class UnsupportedScheduleKey extends InvalidOpeningHoursDefinition
 {
     /**
-     * Create an exception for an unsupported top-level schedule key.
+     * Create an exception for a top-level key outside the supported vocabulary.
      */
     public static function withKey(string $key): self
     {

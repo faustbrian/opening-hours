@@ -14,13 +14,21 @@ use Exception;
 use function sprintf;
 
 /**
+ * Thrown when a local range string cannot be parsed into opening boundaries.
+ *
+ * This error is raised before individual endpoint times are resolved, so it
+ * specifically signals that the native `HH:MM-HH:MM` wrapper format is broken
+ * rather than that one endpoint merely contains an invalid time value.
+ *
  * @author Brian Faust <brian@cline.sh>
- * Thrown when a local time range string does not match the expected format.
  */
 final class InvalidTimeRangeString extends Exception implements OpeningHoursException
 {
     /**
-     * Creates an exception for an invalid `HH:MM-HH:MM` range string.
+     * Create an exception for a malformed native range definition.
+     *
+     * The message includes the original value so callers can report which
+     * opening-hours segment failed validation.
      */
     public static function forString(string $string): self
     {

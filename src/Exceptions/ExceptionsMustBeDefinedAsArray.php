@@ -10,14 +10,18 @@
 namespace Cline\OpeningHours\Exceptions;
 
 /**
- * Thrown when the `exceptions` definition is not an array.
+ * Thrown when the reserved `exceptions` schedule entry is not an array.
+ *
+ * The package interprets this section as a keyed collection of date, month-day,
+ * or date-range overrides. A non-array value means those override rules cannot
+ * be parsed deterministically, so definition loading fails immediately.
  *
  * @author Brian Faust <brian@cline.sh>
  */
 final class ExceptionsMustBeDefinedAsArray extends InvalidOpeningHoursDefinition
 {
     /**
-     * Create an exception for a non-array `exceptions` definition.
+     * Create an exception for a malformed top-level `exceptions` definition.
      */
     public static function exceptionsMustBeDefinedAsArray(): self
     {

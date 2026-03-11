@@ -10,7 +10,10 @@
 namespace Cline\OpeningHours\Exceptions;
 
 /**
- * Thrown when a Schema.org `validFrom` date is malformed.
+ * Thrown when a Schema.org `validFrom` selector has an unsupported shape.
+ *
+ * The parser accepts either full dates (`Y-m-d`) or recurring month-day values
+ * (`m-d`) so it can build exact-date, range, or annual override rules.
  *
  * @author Brian Faust <brian@cline.sh>
  */

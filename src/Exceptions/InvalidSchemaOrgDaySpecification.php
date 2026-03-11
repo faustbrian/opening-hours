@@ -12,6 +12,9 @@ namespace Cline\OpeningHours\Exceptions;
 /**
  * Thrown when a Schema.org day value is not one of the supported weekdays.
  *
+ * Only explicit weekday names and their `https://schema.org/...` equivalents
+ * are accepted. Any other token is rejected instead of being guessed.
+ *
  * @author Brian Faust <brian@cline.sh>
  */
 final class InvalidSchemaOrgDaySpecification extends InvalidOpeningHoursSpecification

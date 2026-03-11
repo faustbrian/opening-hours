@@ -12,7 +12,11 @@ namespace Cline\OpeningHours\Exceptions;
 use InvalidArgumentException;
 
 /**
- * Base exception for invalid opening-hours specification input.
+ * Base exception for malformed Schema.org opening-hours specifications.
+ *
+ * This separates structured-data import failures from invalid native array
+ * definitions so callers can report third-party data problems with more
+ * precise context.
  *
  * @author Brian Faust <brian@cline.sh>
  */

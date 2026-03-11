@@ -10,7 +10,11 @@
 namespace Cline\OpeningHours\Exceptions;
 
 /**
- * Thrown when a day definition is not expressed as an array of ranges.
+ * Thrown when a native day definition is not expressed as an array-like range list.
+ *
+ * The package accepts empty arrays, lists of range strings, and nested arrays
+ * containing an `hours` key. Any other day-level container means the caller is
+ * not using the documented native definition format.
  *
  * @author Brian Faust <brian@cline.sh>
  */

@@ -14,9 +14,15 @@ use DateTimeImmutable;
 use DateTimeInterface;
 
 /**
- * @author Brian Faust <brian@cline.sh>
- * Concrete date-time interval derived from local opening-hours ranges.
+ * Concrete date-time interval derived from a local opening-hours range.
  *
+ * The rest of the package stores availability in date-agnostic local values.
+ * This type is the bridge to real calendar instants when callers need to check
+ * containment against a `DateTimeInterface` or expose resolved openings as
+ * actual datetimes. The interval keeps the package-wide convention of inclusive
+ * start and exclusive end boundaries.
+ *
+ * @author Brian Faust <brian@cline.sh>
  * @psalm-immutable
  */
 final readonly class DateTimeInterval
@@ -27,9 +33,12 @@ final readonly class DateTimeInterval
     ) {}
 
     /**
-     * Creates an interval by anchoring a local time range to a schedule date.
+     * Anchor a local range to the calendar date that owns the schedule entry.
      *
-     * Overnight ranges end on the following calendar day.
+     * This is used when a caller already knows which day's schedule applies and
+     * wants real datetimes for each local range. Overnight ranges carry their
+     * end boundary into the following day while keeping the original schedule
+     * date as the opening boundary.
      */
     public static function fromScheduleDate(
         DateTimeInterface $scheduleDate,
@@ -50,10 +59,13 @@ final readonly class DateTimeInterval
     }
 
     /**
-     * Creates an interval around a reference moment for containment checks.
+     * Build an interval around a reference moment for "open now" style checks.
      *
-     * For overnight ranges, the interval is placed on the previous or next day
-     * relative to the reference as needed.
+     * Overnight ranges are shifted to the previous or following calendar day
+     * relative to the reference so the interval covers the concrete occurrence
+     * that could contain that moment. This avoids requiring callers to reason
+     * about whether an after-midnight time belongs to today's or yesterday's
+     * schedule entry.
      */
     public static function fromLocalTimeRange(
         DateTimeInterface $reference,
@@ -87,7 +99,7 @@ final readonly class DateTimeInterval
     }
 
     /**
-     * Returns the inclusive start of the interval.
+     * Get the inclusive opening instant for the resolved interval.
      */
     public function start(): DateTimeImmutable
     {
@@ -95,7 +107,7 @@ final readonly class DateTimeInterval
     }
 
     /**
-     * Returns the exclusive end of the interval.
+     * Get the exclusive closing instant for the resolved interval.
      */
     public function end(): DateTimeImmutable
     {
@@ -103,9 +115,10 @@ final readonly class DateTimeInterval
     }
 
     /**
-     * Checks whether the date-time falls inside the interval.
+     * Determine whether a concrete moment falls inside the interval.
      *
-     * The start is inclusive and the end is exclusive.
+     * The start is inclusive and the end is exclusive so adjacent intervals can
+     * meet without both claiming the same instant.
      */
     public function contains(DateTimeInterface $dateTime): bool
     {

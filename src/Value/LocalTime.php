@@ -18,9 +18,15 @@ use function preg_match;
 use function sprintf;
 
 /**
- * @author Brian Faust <brian@cline.sh>
- * Immutable local clock time without timezone context.
+ * Immutable wall-clock time used by opening-hours definitions.
  *
+ * This type deliberately omits date and timezone information. It represents
+ * the local clock values stored inside weekly schedules, exception rules, and
+ * Schema.org conversions. The package also permits `24:00` as a synthetic
+ * end-of-day value so closing boundaries can be modeled without forcing a next
+ * day date rollover at the value-object level.
+ *
+ * @author Brian Faust <brian@cline.sh>
  * @psalm-immutable
  */
 final readonly class LocalTime implements Stringable
@@ -30,13 +36,23 @@ final readonly class LocalTime implements Stringable
         private int $minutes,
     ) {}
 
+    /**
+     * Format the time for string contexts.
+     *
+     * The package uses the same normalized `HH:MM` representation for
+     * serialization, exception messages, and schedule formatting.
+     */
     public function __toString(): string
     {
         return $this->format();
     }
 
     /**
-     * Creates a local time from `HH:MM`, allowing `24:00` for end-of-day use.
+     * Create a local time from the package's normalized `HH:MM` format.
+     *
+     * Validation accepts ordinary 24-hour times plus `24:00`, which is reserved
+     * for end-of-day boundaries and therefore cannot be expressed by PHP's
+     * native time parsing alone.
      *
      * @throws InvalidTimeString
      */
@@ -52,9 +68,11 @@ final readonly class LocalTime implements Stringable
     }
 
     /**
-     * Creates a local time using the hour and minute from a date-time value.
+     * Create a local time from the hour and minute parts of a date-time value.
      *
-     * Seconds and timezone offset are ignored.
+     * Seconds, subseconds, and any offset metadata are intentionally discarded.
+     * This allows schedule resolution to compare only wall-clock values after
+     * any query-time timezone normalization has already been applied upstream.
      *
      * @throws InvalidTimeString
      */
@@ -64,7 +82,9 @@ final readonly class LocalTime implements Stringable
     }
 
     /**
-     * Returns the hour component in 24-hour format.
+     * Get the hour component in 24-hour notation.
+     *
+     * This returns `24` only for the synthetic `24:00` boundary.
      */
     public function hours(): int
     {
@@ -72,7 +92,7 @@ final readonly class LocalTime implements Stringable
     }
 
     /**
-     * Returns the minute component.
+     * Get the minute component of the local time.
      */
     public function minutes(): int
     {
@@ -80,7 +100,11 @@ final readonly class LocalTime implements Stringable
     }
 
     /**
-     * Returns minutes since midnight, with `24:00` represented as `1440`.
+     * Convert the time into minutes since midnight.
+     *
+     * The special `24:00` value is represented as `1440`, which lets ordering,
+     * range comparisons, and interval anchoring work with ordinary integer
+     * arithmetic.
      */
     public function minutesSinceMidnight(): int
     {
@@ -88,7 +112,11 @@ final readonly class LocalTime implements Stringable
     }
 
     /**
-     * Returns `true` only for `24:00`.
+     * Determine whether this value is the synthetic end-of-day boundary.
+     *
+     * The package uses this primarily when a closing boundary should be
+     * considered the end of the current service day rather than midnight at the
+     * start of the day.
      */
     public function isEndOfDay(): bool
     {
@@ -96,7 +124,11 @@ final readonly class LocalTime implements Stringable
     }
 
     /**
-     * Compares this time with another local time.
+     * Determine whether this time occurs before another local time.
+     *
+     * Comparison is purely numeric and does not interpret wrap-around or
+     * date-specific context. That higher-level semantics is handled by ranges
+     * and schedule intervals.
      */
     public function isBefore(self $other): bool
     {
@@ -104,7 +136,7 @@ final readonly class LocalTime implements Stringable
     }
 
     /**
-     * Compares this time with another local time.
+     * Determine whether this time occurs after another local time.
      */
     public function isAfter(self $other): bool
     {
@@ -112,7 +144,7 @@ final readonly class LocalTime implements Stringable
     }
 
     /**
-     * Formats the time as `HH:MM`.
+     * Format the time using the package's canonical `HH:MM` output.
      */
     public function format(): string
     {

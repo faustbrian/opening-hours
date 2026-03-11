@@ -10,7 +10,10 @@
 namespace Cline\OpeningHours\Exceptions;
 
 /**
- * Thrown when Schema.org entries omit string `opens` or `closes` values.
+ * Thrown when a Schema.org item is open but does not provide string hours.
+ *
+ * Once an entry is not considered closed, both `opens` and `closes` must be
+ * present as strings so the parser can create a concrete {@see \Cline\OpeningHours\Schedule\DaySchedule}.
  *
  * @author Brian Faust <brian@cline.sh>
  */

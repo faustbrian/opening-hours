@@ -17,7 +17,12 @@ use function array_search;
 use function mb_strtolower;
 
 /**
- * Day-of-week enum used throughout weekly schedules and overrides.
+ * Canonical weekday enum for weekly schedules and rule resolution.
+ *
+ * This type keeps all day-of-week handling inside a constrained package-level
+ * vocabulary. It is used when mapping array definitions, deriving schedules
+ * from concrete dates, and indexing weekly schedules without leaking
+ * locale-dependent strings across the codebase.
  *
  * @author Brian Faust <brian@cline.sh>
  */
@@ -32,7 +37,11 @@ enum Day: string
     case SUNDAY = 'sunday';
 
     /**
-     * Resolve the day of week for a calendar date or date-time.
+     * Resolve the package weekday for a calendar date or date-time.
+     *
+     * PHP supplies an English day name via `format('l')`, which is then routed
+     * through {@see self::fromName()} so invalid or unexpected values still
+     * surface as package exceptions.
      *
      * @throws InvalidDayName When the formatted day name cannot be resolved.
      */
@@ -42,7 +51,11 @@ enum Day: string
     }
 
     /**
-     * Create a day enum from an English day name, case-insensitively.
+     * Create a weekday enum from an English day name, case-insensitively.
+     *
+     * Array definitions and Schema.org parsing eventually normalize into these
+     * enum cases so the rest of the package can rely on a fixed lowercase
+     * storage format.
      *
      * @throws InvalidDayName When the provided name is not a valid English weekday.
      */
@@ -56,7 +69,10 @@ enum Day: string
     }
 
     /**
-     * Convert the enum to its ISO-8601 day number, where Monday is 1 and Sunday is 7.
+     * Convert the weekday into its ISO-8601 numeric representation.
+     *
+     * Monday maps to `1` and Sunday maps to `7`, matching PHP's weekday
+     * conventions for integrations that need numeric day ordering.
      */
     public function toISO(): int
     {

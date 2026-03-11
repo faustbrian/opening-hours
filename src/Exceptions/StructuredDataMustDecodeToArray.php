@@ -12,6 +12,10 @@ namespace Cline\OpeningHours\Exceptions;
 /**
  * Thrown when decoded Schema.org data does not produce an array.
  *
+ * After JSON decoding the parser expects a list of `OpeningHoursSpecification`
+ * items. Any other top-level JSON type indicates the upstream payload is not in
+ * the supported shape.
+ *
  * @author Brian Faust <brian@cline.sh>
  */
 final class StructuredDataMustDecodeToArray extends InvalidOpeningHoursSpecification

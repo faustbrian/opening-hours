@@ -12,6 +12,10 @@ namespace Cline\OpeningHours\Exceptions;
 /**
  * Thrown when exception override keys are not strings.
  *
+ * Override keys encode date semantics such as exact dates, recurring month/day
+ * pairs, or inclusive ranges. Non-string keys cannot participate in that
+ * parsing logic and are therefore rejected immediately.
+ *
  * @author Brian Faust <brian@cline.sh>
  */
 final class ExceptionKeysMustBeStrings extends InvalidOpeningHoursDefinition

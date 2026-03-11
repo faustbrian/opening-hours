@@ -12,7 +12,12 @@ namespace Cline\OpeningHours\Schedule;
 use Cline\OpeningHours\Value\Day;
 
 /**
- * Immutable weekly schedule keyed by lowercase English day names.
+ * Immutable baseline schedule for a seven-day week.
+ *
+ * This type holds the package's fallback schedule before any date-based override rules
+ * are applied. Every {@see Day} is always present in the stored map, which lets the rest
+ * of the package treat missing day definitions as explicit closures rather than dealing
+ * with optional lookups.
  *
  * @author Brian Faust <brian@cline.sh>
  * @psalm-immutable
@@ -20,7 +25,7 @@ use Cline\OpeningHours\Value\Day;
 final readonly class WeeklySchedule
 {
     /**
-     * @param array<string, DaySchedule> $days
+     * @param array<string, DaySchedule> $days Complete weekday map keyed by lowercase English day name.
      */
     private function __construct(
         private array $days,
@@ -28,6 +33,10 @@ final readonly class WeeklySchedule
 
     /**
      * Build a complete weekly schedule, defaulting omitted days to closed.
+     *
+     * Callers may pass only the days they explicitly define. Any omitted weekday is
+     * normalized to {@see DaySchedule::closed()} so the internal representation is always
+     * complete and deterministic.
      *
      * @param array<string, DaySchedule> $days
      */
@@ -43,7 +52,7 @@ final readonly class WeeklySchedule
     }
 
     /**
-     * Get the schedule for a specific day of the week.
+     * Return the schedule for one specific day of the week.
      */
     public function forDay(Day $day): DaySchedule
     {
@@ -51,7 +60,7 @@ final readonly class WeeklySchedule
     }
 
     /**
-     * Get all day schedules keyed by lowercase English day names.
+     * Return all day schedules keyed by lowercase English day names.
      *
      * @return array<string, DaySchedule>
      */

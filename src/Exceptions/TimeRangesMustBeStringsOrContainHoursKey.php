@@ -10,7 +10,11 @@
 namespace Cline\OpeningHours\Exceptions;
 
 /**
- * Thrown when a range definition is neither a string nor an array with `hours`.
+ * Thrown when a native range definition cannot be normalized into hours.
+ *
+ * Range entries may be provided directly as strings or wrapped in arrays that
+ * expose an `hours` key for backward compatibility. Any other shape is
+ * ambiguous and therefore rejected.
  *
  * @author Brian Faust <brian@cline.sh>
  */

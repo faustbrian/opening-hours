@@ -14,6 +14,10 @@ use function sprintf;
 /**
  * Thrown when an exception override key uses an unsupported date syntax.
  *
+ * Native exception keys must be exact dates, recurring month/day pairs, or
+ * inclusive date ranges. Anything else is rejected to avoid ambiguous override
+ * semantics.
+ *
  * @author Brian Faust <brian@cline.sh>
  */
 final class UnsupportedExceptionKey extends InvalidOpeningHoursDefinition

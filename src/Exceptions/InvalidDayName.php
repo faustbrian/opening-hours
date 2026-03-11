@@ -15,14 +15,18 @@ use Throwable;
 use function sprintf;
 
 /**
- * Thrown when a day name cannot be mapped to {@see \Cline\OpeningHours\Day}.
+ * Thrown when a day name cannot be mapped to {@see \Cline\OpeningHours\Value\Day}.
+ *
+ * This is primarily raised when converting formatted `DateTimeInterface`
+ * weekday names or user-supplied strings into the package's lowercase weekday
+ * enum values.
  *
  * @author Brian Faust <brian@cline.sh>
  */
 final class InvalidDayName extends Exception implements OpeningHoursException
 {
     /**
-     * Create an exception for a day name that does not map to {@see \Cline\OpeningHours\Day}.
+     * Create an exception for a day name that does not map to the weekday enum.
      *
      * @param string     $name     The invalid day name.
      * @param ?Throwable $previous The original enum conversion failure, if available.

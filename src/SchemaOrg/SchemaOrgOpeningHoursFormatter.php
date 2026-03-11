@@ -19,14 +19,25 @@ use Cline\OpeningHours\Value\Day;
 use function ucfirst;
 
 /**
- * Formats schedules as Schema.org `OpeningHoursSpecification` items.
+ * Serializes normalized schedules as Schema.org `OpeningHoursSpecification`
+ * items.
+ *
+ * The formatter emits one item per local range. Weekly schedule entries use
+ * `dayOfWeek`, while override rules become validity-bound items with
+ * `validFrom` and `validThrough`. Closed exceptions are represented using
+ * `00:00`/`00:00` because that is the same convention the parser recognizes
+ * when converting structured data back into package schedules.
  *
  * @author Brian Faust <brian@cline.sh>
  */
 final class SchemaOrgOpeningHoursFormatter
 {
     /**
-     * Format weekly schedules and overrides as Schema.org items.
+     * Format both the weekly fallback schedule and explicit override rules as
+     * Schema.org items.
+     *
+     * Rules are emitted after the weekly schedule because they represent
+     * exceptional validity windows rather than default weekday behavior.
      *
      * @return list<array<string, string>>
      */
@@ -69,6 +80,8 @@ final class SchemaOrgOpeningHoursFormatter
     }
 
     /**
+     * Format a single-date override as Schema.org validity-bound items.
+     *
      * @return list<array<string, string>>
      */
     private static function formatDateRule(DateOverrideRule $rule): array
@@ -81,6 +94,9 @@ final class SchemaOrgOpeningHoursFormatter
     }
 
     /**
+     * Format an inclusive date-range override as Schema.org validity-bound
+     * items.
+     *
      * @return list<array<string, string>>
      */
     private static function formatDateRangeRule(DateRangeOverrideRule $rule): array
@@ -93,6 +109,8 @@ final class SchemaOrgOpeningHoursFormatter
     }
 
     /**
+     * Format a recurring month-day override using partial-date validity keys.
+     *
      * @return list<array<string, string>>
      */
     private static function formatMonthDayRule(MonthDayOverrideRule $rule): array
@@ -105,6 +123,11 @@ final class SchemaOrgOpeningHoursFormatter
     }
 
     /**
+     * Format a day schedule inside a fixed validity window.
+     *
+     * Closed schedules are emitted as a single `00:00`/`00:00` item so the
+     * parser can round-trip them back to {@see DaySchedule::closed()}.
+     *
      * @return list<array<string, string>>
      */
     private static function formatScheduleWithValidity(

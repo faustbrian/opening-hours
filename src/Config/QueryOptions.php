@@ -13,7 +13,12 @@ use DateTimeZone;
 use Exception;
 
 /**
- * Immutable query-time overrides for timezone conversion and search depth.
+ * Immutable query-time overrides for schedule resolution and formatting.
+ *
+ * Opening-hours definitions are stored in local schedule terms, but callers may
+ * need to ask questions in a different timezone or look ahead a bounded number
+ * of days when searching for the next opening. This value object carries those
+ * per-query overrides without mutating the underlying `OpeningHours` instance.
  *
  * @author Brian Faust <brian@cline.sh>
  * @psalm-immutable
@@ -21,16 +26,28 @@ use Exception;
 final readonly class QueryOptions
 {
     /**
-     * Source timezone used to interpret queried dates and times.
+     * Timezone used to reinterpret incoming query dates and times before lookup.
+     *
+     * When present, schedules are evaluated against the local wall-clock time in
+     * this timezone rather than the timezone attached to the original input
+     * value.
      */
     public ?DateTimeZone $timezone;
 
     /**
-     * Timezone used when formatting returned dates and times.
+     * Timezone applied when returning resolved datetimes to callers.
+     *
+     * This is separate from `$timezone` so consumers can query in one timezone
+     * and present results in another.
      */
     public ?DateTimeZone $outputTimezone;
 
     /**
+     * Normalize timezone overrides into concrete `DateTimeZone` instances.
+     *
+     * String identifiers are resolved eagerly so invalid configuration fails at
+     * construction time instead of much later during schedule lookup.
+     *
      * @param null|DateTimeZone|string $timezone        Source timezone object or timezone identifier.
      * @param null|DateTimeZone|string $outputTimezone  Output timezone object or timezone identifier.
      * @param int                      $maxDaysToSearch Maximum number of days to inspect when resolving matches.
@@ -58,7 +75,12 @@ final readonly class QueryOptions
     }
 
     /**
-     * Creates a new instance with non-null values from the given overrides.
+     * Merge explicit override values onto the current query options.
+     *
+     * A `null` override means "keep the existing value" for the timezone
+     * fields, while `maxDaysToSearch` is always taken from the override object
+     * once one is provided. This mirrors how package entry points combine
+     * default query options with call-specific overrides.
      *
      * @param null|self $options Override values to merge into the current options.
      *

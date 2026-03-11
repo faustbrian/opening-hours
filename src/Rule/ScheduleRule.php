@@ -13,18 +13,27 @@ use Cline\OpeningHours\Schedule\DaySchedule;
 use DateTimeInterface;
 
 /**
+ * Contract for rules that can replace the weekly schedule on matching dates.
+ *
+ * Implementations encapsulate one date-matching strategy such as an exact date, a
+ * recurring month-day, or an inclusive date range. The resolver treats them uniformly:
+ * if a rule matches the queried date, the rule's schedule replaces the baseline weekly
+ * schedule for that date.
+ *
  * @author Brian Faust <brian@cline.sh>
- * Contract for date-based schedule overrides.
  */
 interface ScheduleRule
 {
     /**
-     * Determines whether this rule applies to the provided date.
+     * Determine whether this rule applies to the provided date.
+     *
+     * Implementations are expected to evaluate against the already-normalized query date,
+     * not to perform timezone conversion themselves.
      */
     public function appliesTo(DateTimeInterface $date): bool;
 
     /**
-     * Returns the day schedule that replaces the base weekly schedule.
+     * Return the day schedule that replaces the base weekly schedule for matching dates.
      */
     public function schedule(): DaySchedule;
 }

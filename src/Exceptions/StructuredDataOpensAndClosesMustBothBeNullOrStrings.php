@@ -10,7 +10,11 @@
 namespace Cline\OpeningHours\Exceptions;
 
 /**
- * Thrown when only one of Schema.org `opens` or `closes` is provided.
+ * Thrown when Schema.org `opens` and `closes` are provided inconsistently.
+ *
+ * A structured-data item must either provide both values as strings or leave
+ * both values null to represent a closed schedule. Mixed states are ambiguous
+ * and cannot be normalized safely.
  *
  * @author Brian Faust <brian@cline.sh>
  */

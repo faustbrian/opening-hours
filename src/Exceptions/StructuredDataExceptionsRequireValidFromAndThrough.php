@@ -12,6 +12,9 @@ namespace Cline\OpeningHours\Exceptions;
 /**
  * Thrown when a Schema.org exception entry is missing validity dates.
  *
+ * Entries without `dayOfWeek` are treated as date-bound overrides, so both
+ * `validFrom` and `validThrough` are required to define their scope.
+ *
  * @author Brian Faust <brian@cline.sh>
  */
 final class StructuredDataExceptionsRequireValidFromAndThrough extends InvalidOpeningHoursSpecification

@@ -12,6 +12,10 @@ namespace Cline\OpeningHours\Exceptions;
 /**
  * Thrown when a day definition includes overlapping local time ranges.
  *
+ * Strict schedule construction preserves non-overlapping ranges as an invariant,
+ * so conflicting intervals are rejected instead of being silently merged during
+ * `DaySchedule` creation.
+ *
  * @author Brian Faust <brian@cline.sh>
  */
 final class DaySchedulesCannotContainOverlappingRanges extends InvalidOpeningHoursDefinition

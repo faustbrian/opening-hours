@@ -17,9 +17,15 @@ use function explode;
 use function sprintf;
 
 /**
- * @author Brian Faust <brian@cline.sh>
- * Represents a local opening-hours range between two clock times.
+ * Immutable local opening window between two wall-clock times.
  *
+ * This value object is the canonical representation used by day schedules,
+ * schedule resolution, and Schema.org parsing. A range may either stay within
+ * a single calendar day or wrap past midnight into the following day. The
+ * package treats the start as inclusive and the end as exclusive so adjacent
+ * ranges can touch without overlapping.
+ *
+ * @author Brian Faust <brian@cline.sh>
  * @psalm-immutable
  */
 final readonly class LocalTimeRange implements Stringable
@@ -29,13 +35,24 @@ final readonly class LocalTimeRange implements Stringable
         private LocalTime $end,
     ) {}
 
+    /**
+     * Format the range for string contexts.
+     *
+     * This delegates to {@see self::format()} so the textual representation
+     * remains identical anywhere a range is cast to a string.
+     */
     public function __toString(): string
     {
         return $this->format();
     }
 
     /**
-     * Creates a range from a `HH:MM-HH:MM` string.
+     * Create a range from the package's native `HH:MM-HH:MM` definition format.
+     *
+     * Both endpoints are parsed through {@see LocalTime::fromString()}, which
+     * means `24:00` is accepted for end-of-day boundaries. Validation is kept
+     * strict here so malformed definitions fail before they reach schedule
+     * normalization or overlap detection.
      *
      * @throws InvalidTimeRangeString
      */
@@ -54,7 +71,10 @@ final readonly class LocalTimeRange implements Stringable
     }
 
     /**
-     * Returns the inclusive start time of the range.
+     * Get the inclusive opening boundary for the range.
+     *
+     * Consumers use this when anchoring the range onto a concrete schedule date
+     * or when sorting multiple ranges into stable start-time order.
      */
     public function start(): LocalTime
     {
@@ -62,7 +82,11 @@ final readonly class LocalTimeRange implements Stringable
     }
 
     /**
-     * Returns the exclusive end time of the range.
+     * Get the exclusive closing boundary for the range.
+     *
+     * The end may be earlier than the start when the range carries past
+     * midnight, and `24:00` is preserved so full-day boundaries can be
+     * represented without truncation.
      */
     public function end(): LocalTime
     {
@@ -70,7 +94,12 @@ final readonly class LocalTimeRange implements Stringable
     }
 
     /**
-     * Returns `true` when the end time falls on the following calendar day.
+     * Determine whether the range extends into the following calendar day.
+     *
+     * Opening-hours definitions model overnight service by keeping a single
+     * logical range whose end time is less than or equal to its start time.
+     * Schedule queries use this flag to include the previous day's carry-over
+     * availability when answering "is open now" style lookups.
      */
     public function wrapsToNextDay(): bool
     {
@@ -78,9 +107,12 @@ final readonly class LocalTimeRange implements Stringable
     }
 
     /**
-     * Checks whether the time is inside the range.
+     * Determine whether a local time falls within this opening window.
      *
-     * The start is inclusive and the end is exclusive.
+     * The start is inclusive and the end is exclusive. Overnight ranges are
+     * treated as two logical segments split around midnight so a single range
+     * can answer containment checks for both the opening day and the carried
+     * portion after midnight.
      */
     public function contains(LocalTime $time): bool
     {
@@ -96,7 +128,11 @@ final readonly class LocalTimeRange implements Stringable
     }
 
     /**
-     * Checks whether this range shares any time with another range.
+     * Determine whether this range shares any real opening time with another.
+     *
+     * Both ranges are reduced to one-day or two-day numeric segments before
+     * comparison. This keeps overlap detection correct even when one or both
+     * ranges wrap across midnight.
      */
     public function overlaps(self $other): bool
     {
@@ -112,7 +148,10 @@ final readonly class LocalTimeRange implements Stringable
     }
 
     /**
-     * Formats the range as `HH:MM-HH:MM`.
+     * Format the range using the package's stable definition syntax.
+     *
+     * The returned value is suitable for debugging, serialization helpers, and
+     * round-tripping through {@see self::fromString()}.
      */
     public function format(): string
     {
@@ -120,6 +159,12 @@ final readonly class LocalTimeRange implements Stringable
     }
 
     /**
+     * Split the range into comparable minute segments inside a 24-hour frame.
+     *
+     * Non-overnight ranges yield a single segment. Overnight ranges are split
+     * at midnight so overlap checks can remain a straightforward interval
+     * comparison instead of carrying special-case branching in callers.
+     *
      * @return list<array{0: int, 1: int}>
      */
     private function segments(): array

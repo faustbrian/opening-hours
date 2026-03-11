@@ -12,6 +12,9 @@ namespace Cline\OpeningHours\Exceptions;
 /**
  * Thrown when a Schema.org specification list contains a non-array item.
  *
+ * Each item must expose named fields such as `dayOfWeek`, `opens`, and
+ * `validFrom`, so scalar entries cannot be interpreted safely by the parser.
+ *
  * @author Brian Faust <brian@cline.sh>
  */
 final class OpeningHoursSpecificationItemsMustBeArrays extends InvalidOpeningHoursSpecification

@@ -49,9 +49,22 @@ use function sprintf;
 use function usort;
 
 /**
- * @author Brian Faust <brian@cline.sh>
- * High-level API for querying weekly opening hours and date-specific overrides.
+ * High-level facade for building and querying effective opening-hours schedules.
  *
+ * This immutable entry point owns the package's public definition formats:
+ * native weekly arrays with exception rules and Schema.org
+ * `OpeningHoursSpecification` payloads. It normalizes those inputs into a
+ * {@see Schedule} plus default {@see QueryOptions}, then exposes convenience
+ * methods for point-in-time checks, boundary lookups, and structured-data
+ * serialization.
+ *
+ * Query methods always resolve caller overrides against the instance defaults
+ * first, so timezone conversion and search-depth behavior stays consistent
+ * across a chain of operations. Boundary searches inspect the current day plus
+ * a bounded number of adjacent days in schedule-local time to account for
+ * overnight ranges and explicit date overrides.
+ *
+ * @author Brian Faust <brian@cline.sh>
  * @psalm-immutable
  */
 final readonly class OpeningHours
@@ -64,7 +77,14 @@ final readonly class OpeningHours
     ) {}
 
     /**
-     * @param list<ScheduleRule> $rules
+     * Build an instance from an already-normalized weekly schedule and rule set.
+     *
+     * Use this when the caller has already produced value objects or when tests
+     * need to bypass array parsing. Rules are evaluated in the order provided,
+     * with the first matching rule taking precedence over the weekly schedule for
+     * a given date.
+     *
+     * @param list<ScheduleRule> $rules Override rules evaluated before weekly fallback.
      */
     public static function fromWeeklySchedule(
         WeeklySchedule $weeklySchedule,
@@ -79,6 +99,12 @@ final readonly class OpeningHours
 
     /**
      * Creates opening hours from the package's array definition format.
+     *
+     * Supported top-level keys are lowercase English day names plus
+     * `exceptions`. Each day may be expressed as an array of `HH:MM-HH:MM`
+     * strings or nested arrays containing an `hours` key. Exception keys are
+     * parsed in precedence order as exact dates (`Y-m-d`), recurring month-day
+     * pairs (`m-d`), or inclusive date ranges (`Y-m-d to Y-m-d`).
      *
      * @param array<array-key, mixed> $definition
      *
@@ -195,6 +221,10 @@ final readonly class OpeningHours
     /**
      * Creates opening hours from Schema.org `OpeningHoursSpecification` data.
      *
+     * This delegates parsing to the dedicated Schema.org adapter so external
+     * payload rules, validation failures, and date-based overrides remain
+     * aligned with the formatter in the opposite direction.
+     *
      * @param array<array-key, mixed>|string $structuredData
      *
      * @throws Exceptions\InvalidOpeningHoursSpecification
@@ -210,7 +240,11 @@ final readonly class OpeningHours
     }
 
     /**
-     * Returns the underlying resolved schedule model.
+     * Return the normalized schedule backing all query operations.
+     *
+     * Consumers that need lower-level access can inspect the resolved weekly
+     * schedule and override rules directly without re-parsing the original
+     * definition input.
      */
     public function schedule(): Schedule
     {
@@ -218,7 +252,10 @@ final readonly class OpeningHours
     }
 
     /**
-     * Returns the base weekly schedule without applying override rules.
+     * Return the weekly fallback schedule without applying any overrides.
+     *
+     * This is useful when callers need the canonical week template separately
+     * from date-specific exceptions.
      */
     public function weeklySchedule(): WeeklySchedule
     {
@@ -226,6 +263,11 @@ final readonly class OpeningHours
     }
 
     /**
+     * Return the explicit override rules applied before the weekly schedule.
+     *
+     * The returned order matters because {@see Schedule::forDate()} stops at
+     * the first matching rule.
+     *
      * @return list<ScheduleRule>
      */
     public function rules(): array
@@ -234,7 +276,11 @@ final readonly class OpeningHours
     }
 
     /**
-     * Returns the effective schedule for the provided date.
+     * Return the day schedule that applies on the provided date.
+     *
+     * Query options are merged with the instance defaults before date
+     * resolution so timezone-aware callers can evaluate the schedule from a
+     * different local perspective without mutating the object.
      */
     public function forDate(DateTimeInterface $date, ?QueryOptions $options = null): DaySchedule
     {
@@ -242,7 +288,11 @@ final readonly class OpeningHours
     }
 
     /**
-     * Checks whether the business is open at the given moment.
+     * Determine whether the business is open at the given moment.
+     *
+     * Overnight ranges from the prior day are honored because the underlying
+     * schedule resolution expands them into concrete date-time intervals before
+     * evaluation.
      */
     public function isOpenAt(DateTimeInterface $dateTime, ?QueryOptions $options = null): bool
     {
@@ -250,7 +300,10 @@ final readonly class OpeningHours
     }
 
     /**
-     * Checks whether the business is closed at the given moment.
+     * Determine whether the business is closed at the given moment.
+     *
+     * This is intentionally defined as the inverse of {@see isOpenAt()} so
+     * callers get identical timezone and overnight-range semantics.
      */
     public function isClosedAt(DateTimeInterface $dateTime, ?QueryOptions $options = null): bool
     {
@@ -261,7 +314,8 @@ final readonly class OpeningHours
      * Finds the next opening boundary after the given moment.
      *
      * Returns `null` when no matching boundary is found within the configured
-     * search window.
+     * search window. Boundaries are returned in the configured output timezone
+     * when one has been specified through {@see QueryOptions}.
      */
     public function nextOpen(DateTimeInterface $dateTime, ?QueryOptions $options = null): ?DateTimeImmutable
     {
@@ -272,7 +326,8 @@ final readonly class OpeningHours
      * Finds the next closing boundary after the given moment.
      *
      * Returns `null` when no matching boundary is found within the configured
-     * search window.
+     * search window. If the query moment is already inside an open interval, the
+     * current interval's end is returned immediately instead of searching ahead.
      */
     public function nextClose(DateTimeInterface $dateTime, ?QueryOptions $options = null): ?DateTimeImmutable
     {
@@ -292,7 +347,8 @@ final readonly class OpeningHours
      * Finds the most recent opening boundary before the given moment.
      *
      * Returns `null` when no matching boundary is found within the configured
-     * search window.
+     * search window. The boundary is resolved in schedule-local time first and
+     * converted to the output timezone only when returning the final result.
      */
     public function previousOpen(DateTimeInterface $dateTime, ?QueryOptions $options = null): ?DateTimeImmutable
     {
@@ -303,7 +359,9 @@ final readonly class OpeningHours
      * Finds the most recent closing boundary before the given moment.
      *
      * Returns `null` when no matching boundary is found within the configured
-     * search window.
+     * search window. If the query moment falls inside an open interval, this
+     * returns that interval's start immediately because it is the closing
+     * boundary most recently crossed in terms of state transitions.
      */
     public function previousClose(DateTimeInterface $dateTime, ?QueryOptions $options = null): ?DateTimeImmutable
     {
@@ -320,7 +378,11 @@ final readonly class OpeningHours
     }
 
     /**
-     * Formats the schedule as Schema.org `OpeningHoursSpecification` items.
+     * Format the normalized schedule as Schema.org `OpeningHoursSpecification`
+     * items.
+     *
+     * The output mirrors the parser's expectations so round-tripping between
+     * package-native schedules and structured data stays predictable.
      *
      * @return list<array<string, string>>
      */
@@ -356,6 +418,11 @@ final readonly class OpeningHours
     }
 
     /**
+     * Reject unsupported top-level keys in the native array definition.
+     *
+     * Validation is intentionally strict so typos do not silently disappear
+     * into the normalized schedule and produce surprising open/closed results.
+     *
      * @param array<array-key, mixed> $definition
      */
     private static function guardAgainstUnsupportedDefinitionKeys(array $definition): void
@@ -382,6 +449,13 @@ final readonly class OpeningHours
         }
     }
 
+    /**
+     * Normalize one native day definition into a validated {@see DaySchedule}.
+     *
+     * Empty arrays and `null` are treated as closed days. Arrays containing an
+     * `hours` key are unwrapped for backward compatibility before range parsing
+     * and overlap validation are applied.
+     */
     private static function dayScheduleFromDefinition(mixed $definition): DaySchedule
     {
         if ($definition === [] || $definition === null) {
@@ -408,6 +482,13 @@ final readonly class OpeningHours
         );
     }
 
+    /**
+     * Convert one legacy range entry into a {@see LocalTimeRange}.
+     *
+     * Supported entries are bare `HH:MM-HH:MM` strings and arrays containing an
+     * `hours` key. Anything else is rejected to keep native definitions
+     * unambiguous.
+     */
     private static function rangeFromDefinition(mixed $definition): LocalTimeRange
     {
         if (is_string($definition)) {
@@ -422,6 +503,12 @@ final readonly class OpeningHours
     }
 
     /**
+     * Normalize and merge overlapping range definitions for one day-like value.
+     *
+     * This compatibility helper flattens legacy nested structures, sorts ranges
+     * by start time, and coalesces overlaps into a canonical list of strings
+     * suitable for {@see fromArray()}.
+     *
      * @return list<string>
      */
     private static function normalizeMergedDayDefinition(mixed $definition): array
@@ -466,6 +553,12 @@ final readonly class OpeningHours
     }
 
     /**
+     * Flatten nested legacy range definitions into parsed local time ranges.
+     *
+     * The native merge path accepts strings, arrays of strings, and arrays that
+     * wrap ranges under `hours`. Non-array scalar input is still rejected so the
+     * later normalization step operates on a predictable value-object list.
+     *
      * @return list<LocalTimeRange>
      */
     private static function flattenRangeDefinitions(mixed $definition): array
@@ -494,6 +587,12 @@ final readonly class OpeningHours
         );
     }
 
+    /**
+     * Merge two overlapping local ranges into a single encompassing range.
+     *
+     * Callers are expected to sort ranges by start time first. The merged range
+     * keeps the earlier start and the later end.
+     */
     private static function mergeLocalTimeRanges(
         LocalTimeRange $left,
         LocalTimeRange $right,
@@ -508,6 +607,13 @@ final readonly class OpeningHours
     }
 
     /**
+     * Expand the effective schedule for one date into concrete date-time
+     * intervals.
+     *
+     * Intervals from the previous day that wrap past midnight are included when
+     * they still overlap the requested date so point-in-time queries can reason
+     * about overnight opening correctly.
+     *
      * @return list<DateTimeInterval>
      */
     private function intervalsForDate(DateTimeImmutable $date, QueryOptions $options): array
@@ -541,6 +647,14 @@ final readonly class OpeningHours
         return $intervals;
     }
 
+    /**
+     * Search forward or backward for the next matching open/close boundary.
+     *
+     * The search cursor is first resolved into schedule-local time. Forward
+     * searches return the first boundary strictly after the cursor, while
+     * backward searches keep the latest boundary strictly before it across the
+     * configured search window.
+     */
     private function findBoundary(
         DateTimeInterface $dateTime,
         QueryOptions $options,
@@ -584,11 +698,21 @@ final readonly class OpeningHours
         return $latest ?? null;
     }
 
+    /**
+     * Merge ad-hoc query overrides onto the instance defaults.
+     *
+     * This centralizes option precedence so every public query method applies
+     * timezone and search-depth overrides the same way.
+     */
     private function resolveOptions(?QueryOptions $options = null): QueryOptions
     {
         return $this->defaultQueryOptions->withOverrides($options);
     }
 
+    /**
+     * Convert an input moment into the schedule-local timezone used for
+     * resolution.
+     */
     private function resolveDateTime(DateTimeInterface $dateTime, QueryOptions $options): DateTimeImmutable
     {
         $resolved = DateTimeImmutable::createFromInterface($dateTime);
@@ -600,6 +724,12 @@ final readonly class OpeningHours
         return $resolved;
     }
 
+    /**
+     * Convert a resolved boundary into the configured output timezone.
+     *
+     * When no output timezone is configured the original resolved instant is
+     * returned unchanged.
+     */
     private function formatResult(DateTimeImmutable $dateTime, QueryOptions $options): DateTimeImmutable
     {
         if ($options->outputTimezone instanceof DateTimeZone) {

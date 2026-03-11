@@ -12,6 +12,9 @@ namespace Cline\OpeningHours\Exceptions;
 /**
  * Thrown when a Schema.org `dayOfWeek` value is not a string.
  *
+ * The parser supports canonical weekday names and fully-qualified schema.org
+ * URLs, but both supported variants still need to arrive as strings.
+ *
  * @author Brian Faust <brian@cline.sh>
  */
 final class InvalidOpeningHoursSpecificationDayOfWeek extends InvalidOpeningHoursSpecification

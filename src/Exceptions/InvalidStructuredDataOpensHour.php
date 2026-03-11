@@ -12,6 +12,10 @@ namespace Cline\OpeningHours\Exceptions;
 /**
  * Thrown when a Schema.org `opens` value is malformed.
  *
+ * The parser only accepts `HH:MM` or `HH:MM:SS` strings here, which are then
+ * normalized into the package's local-time representation before schedule
+ * construction.
+ *
  * @author Brian Faust <brian@cline.sh>
  */
 final class InvalidStructuredDataOpensHour extends InvalidOpeningHoursSpecification

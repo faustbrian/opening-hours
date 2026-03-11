@@ -21,14 +21,20 @@ use DateTimeZone;
 use function array_any;
 
 /**
- * @author Brian Faust <brian@cline.sh>
- * Resolves effective opening-hours schedules for specific dates and times.
+ * Resolves weekly schedules and date-based overrides into effective schedule state.
  *
+ * This type sits one level below {@see \Cline\OpeningHours\OpeningHours} and owns the
+ * package's core precedence rules. Matching overrides are evaluated before the baseline
+ * weekly schedule, and optional query timezones are applied before any date comparison so
+ * every caller observes consistent results.
+ *
+ * @author Brian Faust <brian@cline.sh>
  * @psalm-immutable
  */
 final readonly class Schedule
 {
     /**
+     * @param WeeklySchedule     $weeklySchedule Baseline weekly schedule used when no override applies.
      * @param list<ScheduleRule> $rules
      */
     public function __construct(
@@ -37,7 +43,7 @@ final readonly class Schedule
     ) {}
 
     /**
-     * Returns the base weekly schedule used when no override matches.
+     * Return the base weekly schedule used when no override matches the queried date.
      */
     public function weeklySchedule(): WeeklySchedule
     {
@@ -45,7 +51,7 @@ final readonly class Schedule
     }
 
     /**
-     * Returns the date-based override rules applied before the weekly schedule.
+     * Return the date-based override rules checked before the weekly schedule.
      *
      * @return list<ScheduleRule>
      */
@@ -55,9 +61,11 @@ final readonly class Schedule
     }
 
     /**
-     * Returns the day schedule that applies on the given date.
+     * Resolve the day schedule that applies on the given date.
      *
-     * Matching override rules take precedence over the weekly schedule.
+     * The input date is normalized through the optional query timezone first. The first
+     * matching override wins; if no rule matches, the resolver falls back to the weekly
+     * schedule entry for that weekday.
      */
     public function forDate(DateTimeInterface $date, ?QueryOptions $options = null): DaySchedule
     {
@@ -73,9 +81,11 @@ final readonly class Schedule
     }
 
     /**
-     * Checks whether the schedule is open at the given date-time.
+     * Determine whether the schedule is open at the given date-time.
      *
-     * Overnight ranges from the previous day are included.
+     * Overnight ranges from the previous day are included. That matters when a day closes
+     * after midnight, because the current instant can be governed by yesterday's effective
+     * schedule rather than today's first range.
      */
     public function isOpenAt(DateTimeInterface $dateTime, ?QueryOptions $options = null): bool
     {
@@ -94,6 +104,12 @@ final readonly class Schedule
         && $time->minutesSinceMidnight() < $range->end()->minutesSinceMidnight());
     }
 
+    /**
+     * Normalize an arbitrary date-time input into an immutable value in the query timezone.
+     *
+     * If no explicit timezone is provided, only mutability is normalized and the original
+     * instant is preserved.
+     */
     private function resolveDate(DateTimeInterface $date, ?QueryOptions $options): DateTimeImmutable
     {
         $resolved = DateTimeImmutable::createFromInterface($date);
